@@ -38,7 +38,7 @@ runs:
           cp ~/contants/trip-backend-database-config.js database/config/config.js
           echo "${{ inputs.env-value }}" > .env
           yarn install
-          pm2 restart ${{ inputs.folder-name }}
+          pm2 restart ecosystem.config.js
         host: ${{ inputs.host-name }}
         user: root
         key: ${{ inputs.ssh-key }}
