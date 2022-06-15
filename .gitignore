@@ -19,3 +19,6 @@ buck-out/
 
 .env
 .env.local
+
+# Database Config
+database/config/config.js
