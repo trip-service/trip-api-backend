@@ -29,6 +29,7 @@ runs:
       uses: fifsky/ssh-action@master
       with:
         command: |
+          source ~/.bashrc
           cd ./${{ inputs.folder-name }}
           git fetch
           git reset --hard
