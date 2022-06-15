@@ -35,6 +35,7 @@ runs:
           git checkout origin/${{ inputs.branch-name }}
           echo "${{ inputs.db-config }}" > database/config/config.js
           echo "${{ inputs.env-value }}" > .env
+          yarn install
           pm2 restart ${{ inputs.folder-name }}
         host: ${{ inputs.host-name }}
         user: root
