@@ -25,7 +25,7 @@ jobs:
   do-deployment:
     # needs: run-test-cases
     # if: github.event.pull_request.merged == true
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Deploy newest code to dev machine
