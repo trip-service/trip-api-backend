@@ -1,0 +1,65 @@
+name: "Run test cases"
+
+description: "Run all necessary test cases."
+
+inputs:
+  node-version:
+    description: 'Target node version'
+    default: '16'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+      
+    - name: Set up node 
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: use cache 
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          */*/node_modules
+        key: ${{ inputs.node-version }}-${{ hashFiles('package-lock.json') }}
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
+
+    - name: Setup the git-submodules
+      run: git submodule update --remote --rebase
+    #   run: |
+    #     chmod u+x scripts/setup-sub-modules.sh
+    #     scripts/setup-sub-modules.sh
+      shell: bash
+
+    - name: Test preparation
+      run: npm run build
+      shell: bash
+
+    - name: Compile the project...
+      run: npm run build:prod
+      shell: bash
+
+    - name: Run unit tests 
+      run: npm run test:ut
+      shell: bash
+
+    - name: Migration 
+      run: npm run db-migrate test
+      shell: bash
+
+    - name: Run function tests 
+      run: npm run test:ft
+      shell: bash
+
+    # - name: Run integration tests 
+    #   run: npm run test:it
+    #   shell: bash

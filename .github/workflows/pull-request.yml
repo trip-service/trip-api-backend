@@ -1,0 +1,40 @@
+name: pull-request
+
+on:
+  push:
+    branches: [ main, stg, release-v** ]
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+    branches: [ main, stg, release-v** ]
+
+jobs:
+
+  run-test-cases:
+    runs-on: self-hosted
+    services:
+      postgres:
+        image: postgres:14
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+        env:
+          POSTGRES_DB: database_test        
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_HOST: localhost
+          DATABASE_CONNECTION_HOST_TEST: localhost
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Running test cases
+        uses: ./.github/actions/run-test-cases
+        with:
+          node-version: 16
+          
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.

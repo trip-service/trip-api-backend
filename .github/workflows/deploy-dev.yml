@@ -1,0 +1,40 @@
+name: deploy-dev
+
+on:
+  push:
+    branches: 
+      - develop
+
+# on:
+#   pull_request:
+#     branches: 
+#       - develop
+#     types: 
+#       - closed
+
+jobs:
+  # run-test-cases:
+  #   runs-on: self-hosted
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Running test cases
+  #       uses: ./.github/actions/run-test-cases
+  #       with:
+  #         node-version: 16
+
+  do-deployment:
+    # needs: run-test-cases
+    # if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+    - name: Deploy newest code to dev machine
+      uses: ./.github/actions/run-deploy
+      with:
+        folder-name: trip-api-backend
+        branch-name: develop
+        env-key: dev
+        env-value: ${{ secrets.DEV_ENV }}
+        db-config: ${{ secrets.DB_CONFIG }}
+        host-name: ${{ secrets.TRIP_DEV_HOST }}
+        ssh-key: ${{ secrets.SSH_KEY_TRIP_DEV_VALUE }}

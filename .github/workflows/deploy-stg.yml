@@ -1,0 +1,57 @@
+name: test-and-deploy-to-stg
+
+on:
+  push:
+    branches:
+      - stg
+
+jobs:
+  run-test-cases:
+    runs-on: self-hosted
+    services:
+      postgres:
+        image: postgres:14
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+        env:
+          POSTGRES_DB: database_test        
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_HOST: localhost
+          DATABASE_CONNECTION_HOST_TEST: localhost
+    steps:
+      - name: Self Hosted Runner Post Job Cleanup Action
+        uses: TooMuch4U/actions-clean@v2.1
+      - uses: actions/checkout@v3
+      - name: Running test cases
+        uses: ./.github/actions/run-test-cases
+        with:
+          node-version: 16
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
+
+  do-deployment:
+    needs: run-test-cases
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+    - name: Deploy newest code to stg machine
+      uses: ./.github/actions/run-deploy
+      with:
+        folder-name: api-core
+        branch-name: stg
+        host-name: ${{ secrets.AHA_STG_HOST }}
+        ssh-key: ${{ secrets.AHA_STG_SSH_KEY }}
+    - uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      if: always() # Pick up events even if the job fails or is canceled.
