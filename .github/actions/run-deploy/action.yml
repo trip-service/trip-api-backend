@@ -29,12 +29,13 @@ runs:
       uses: fifsky/ssh-action@master
       with:
         command: |
-          source ~/.bashrc
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh    
           cd ./${{ inputs.folder-name }}
           git fetch
           git reset --hard
           git checkout origin/${{ inputs.branch-name }}
-          echo "${{ inputs.db-config }}" > database/config/config.js
+          cp ~/contants/trip-backend-database-config.js database/config/config.js
           echo "${{ inputs.env-value }}" > .env
           yarn install
           pm2 restart ${{ inputs.folder-name }}
