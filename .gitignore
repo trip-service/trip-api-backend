@@ -22,3 +22,6 @@ buck-out/
 
 # Database Config
 database/config/config.js
+
+# npm install lock file
+package-lock.json

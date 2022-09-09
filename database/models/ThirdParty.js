@@ -25,7 +25,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       notificationToken: {
         field: "notification_token",
-        type: Sequelize.Text,
+        type: Sequelize.TEXT,
       },
     },
     {

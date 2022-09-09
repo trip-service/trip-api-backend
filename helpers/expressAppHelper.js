@@ -4,11 +4,9 @@ const cors = require("cors");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const swagger = require('express-swagger-generator');
-const { jwtAuthorizationMiddleware } = require("../helpers/passportManager");
 const indexRouter = require("../controllers/index");
 const authRouter = require("../controllers/authRouter");
 const homeRouter = require("../controllers/homeRouter");
-const userRouter = require("../controllers/userRouter");
 const packageJson = require('../package.json');
 
 const { NODE_ENV, APP_DOMAIN } = process.env;
@@ -56,7 +54,6 @@ expressApp.use(passport.initialize());
 
 expressApp.use('/', indexRouter);
 expressApp.use('/auth', authRouter);
-expressApp.use('/users', passport.authenticate('jwt', { session: false }), userRouter);
 expressApp.use('/home', homeRouter);
 
 // Add GET /health-check express route
