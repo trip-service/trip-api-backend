@@ -4,12 +4,12 @@ module.exports = {
       "members",
       [
         {
-          email: "janedoe1@example.com",
-          name: "janedoe1",
+          email: "janedoe@example.com",
+          name: "janedoe",
         },
         {
-          email: "jondoe2@example.com",
-          name: "jondoe2",
+          email: "tommy@example.com",
+          name: "tommy",
         },
       ],
       {}

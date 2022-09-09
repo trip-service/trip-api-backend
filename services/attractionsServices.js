@@ -1,15 +1,9 @@
 const database = require("../database/models");
 
-module.exports.getAttractionsData = async () => {
-  try {
-    const res = await database.Attraction.findAll();
+module.exports.getAllCities = async () => {
+  const res = await database.Attraction.findAll({
+    attributes: ["id", "name"],
+  });
 
-    return res;
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: attractionsServices.js ~ line 9 ~ module.exports.getAttractionsData= ~ error",
-      error
-    );
-    return [];
-  }
+  return res;
 };

@@ -7,7 +7,7 @@ const swagger = require("express-swagger-generator");
 const indexRouter = require("../controllers/index");
 const authRouter = require("../controllers/authRouter");
 const homeRouter = require("../controllers/homeRouter");
-const attractionsRouter = require("../controllers/attractionsRouter");
+const citiesRouter = require("../controllers/citiesRouter");
 const packageJson = require("../package.json");
 
 const { NODE_ENV, APP_DOMAIN } = process.env;
@@ -56,7 +56,7 @@ expressApp.use(passport.initialize());
 expressApp.use("/", indexRouter);
 expressApp.use("/auth", authRouter);
 expressApp.use("/home", homeRouter);
-expressApp.use("/cities", attractionsRouter);
+expressApp.use("/cities", citiesRouter);
 
 // Add GET /health-check express route
 expressApp.get("/health-check", (req, res) => {
