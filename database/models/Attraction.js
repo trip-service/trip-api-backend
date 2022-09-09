@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+const { now } = require( "lodash" );
+
+>>>>>>> develop
 module.exports = (sequelize, Sequelize) => {
   const Attraction = sequelize.define(
     "Attraction",
@@ -17,6 +22,7 @@ module.exports = (sequelize, Sequelize) => {
         field: "geo_json",
         type: Sequelize.JSON,
       },
+<<<<<<< HEAD
     },
     {
       sequelize,
@@ -28,6 +34,16 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: "updated_at",
     }
   );
+=======
+    }, {
+    sequelize,
+    tableName: "attractions",
+    underscored: true,
+    freezeTableName: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+  });
+>>>>>>> develop
 
   Attraction.associate = function (models) {
     // User.hasMany(models.Contract, {

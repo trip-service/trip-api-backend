@@ -18,8 +18,7 @@ module.exports = (sequelize, Sequelize) => {
     tableName: "tags",
     underscored: true,
     freezeTableName: true,
-
-    createdAt: "created_date",
+    createdAt: "created_at",
     updatedAt: "updated_at",
   });
 
