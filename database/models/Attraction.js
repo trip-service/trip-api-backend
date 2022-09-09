@@ -1,3 +1,4 @@
+const { now } = require( "lodash" );
 
 module.exports = (sequelize, Sequelize) => {
   const Attraction = sequelize.define(
@@ -23,8 +24,7 @@ module.exports = (sequelize, Sequelize) => {
     tableName: "attractions",
     underscored: true,
     freezeTableName: true,
-
-    createdAt: "created_date",
+    createdAt: "created_at",
     updatedAt: "updated_at",
   });
 
