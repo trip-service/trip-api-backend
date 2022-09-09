@@ -5,7 +5,7 @@ const pick = require("lodash/pick");
 const yup = require("yup");
 
 const { responseOk, responseErrWithMsg } = require("../helpers/response");
-const { parseUserResponse } = require("../services/userServices");
+// const { parseUserResponse } = require("../services/userServices");
 const { jwtAuthorizationMiddleware } = require("../helpers/passportManager");
 
 const router = express.Router();
@@ -18,7 +18,6 @@ const { AUTH_SECRET } = process.env;
  *   - logout response status
  *   - eg: true
  */
-
 
 /**
  * Logout API.
@@ -34,16 +33,16 @@ const { AUTH_SECRET } = process.env;
  */
 
 router.post("/logout", jwtAuthorizationMiddleware, async (req, res) => {
-try{
-  return responseOk(res, { success: true });
-} catch (error) {
-  responseErrWithMsg(res, error.message);
-}
+  try {
+    return responseOk(res, { success: true });
+  } catch (error) {
+    responseErrWithMsg(res, error.message);
+  }
 });
 
 const loginRequestSchema = yup.object({
-  phone: yup.string().required('電話或密碼不可為空'),
-  password: yup.string().required('電話或密碼不可為空'),
+  phone: yup.string().required("電話或密碼不可為空"),
+  password: yup.string().required("電話或密碼不可為空"),
 });
 
 /**
@@ -100,11 +99,11 @@ router.post("/", (req, res) => {
         AUTH_SECRET
       );
 
-      return responseOk(res,  {
-          token,
-          expireIn: null,
-          user: parseUserResponse(user),
-        });
+      return responseOk(res, {
+        token,
+        expireIn: null,
+        user: null,
+      });
     } catch (error) {
       responseErrWithMsg(res, error.message);
     }

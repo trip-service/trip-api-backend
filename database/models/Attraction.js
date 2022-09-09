@@ -1,4 +1,3 @@
-
 module.exports = (sequelize, Sequelize) => {
   const Attraction = sequelize.define(
     "Attraction",
@@ -18,15 +17,17 @@ module.exports = (sequelize, Sequelize) => {
         field: "geo_json",
         type: Sequelize.JSON,
       },
-    }, {
-    sequelize,
-    tableName: "attractions",
-    underscored: true,
-    freezeTableName: true,
+    },
+    {
+      sequelize,
+      tableName: "attractions",
+      underscored: true,
+      freezeTableName: true,
 
-    createdAt: "created_date",
-    updatedAt: "updated_at",
-  });
+      createdAt: "created_date",
+      updatedAt: "updated_at",
+    }
+  );
 
   Attraction.associate = function (models) {
     // User.hasMany(models.Contract, {
