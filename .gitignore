@@ -25,3 +25,6 @@ database/config/config.js
 
 # npm install lock file
 package-lock.json
+
+# jest convage
+coverage
