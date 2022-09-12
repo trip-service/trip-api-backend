@@ -116,6 +116,7 @@ router.post("/login", async (req, res) => {
       info: memberResult,
     });
   } catch (error) {
+    console.log("🚀 ~ file: authRouter.js ~ line 119 ~ router.post ~ error", error)
     responseErrWithMsg(res, error.message);
   }
 });
