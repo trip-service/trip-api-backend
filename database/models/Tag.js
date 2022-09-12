@@ -1,8 +1,10 @@
+const baseMigration = require( "../config/baseMigration" );
 
 module.exports = (sequelize, Sequelize) => {
   const Tag = sequelize.define(
     "Tag",
     {
+      ...baseMigration,
       id: {
         allowNull: false,
         autoIncrement: true,

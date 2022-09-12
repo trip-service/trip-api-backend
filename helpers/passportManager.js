@@ -3,7 +3,7 @@ const passportJWT = require("passport-jwt");
 const isEmpty = require('lodash/isEmpty');
 const LocalStrategy = require('passport-local').Strategy;
 const { saltHashPassword } = require('./utils');
-const { getUserWithPasswordBy } = require('../services/userServices');
+const { getUserWithPasswordBy } = require('../services/memberServices');
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -65,7 +65,7 @@ module.exports.jwtAuthorizationMiddleware = (req, res, next) => {
         success: false,
         data: {
           message: info.message,
-        }        
+        }
       };
 
       return res.status(401).json(err); // send the error response to client
