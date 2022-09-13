@@ -1,28 +1,27 @@
 const { mockApp } = require("../server.test");
 
 describe("Test cities routes", () => {
-  beforeAll((done) => {
-    try {
-      done();
-    } catch (error) {
-      done(error);
-    }
-  });
-
-  afterAll((done) => {
-    try {
-      done();
-    } catch (error) {
-      done(error);
-    }
-  });
-
   it("should get cities by mockUser success", (done) => {
     mockApp
       .get("/cities")
       .send()
-      .then((response) => {
-        expect(response.statusCode).toBe(200);
+      .expect(200)
+      .catch(done);
+  });
+
+  it("should the response data format right", (done) => {
+    mockApp
+      .get("/cities")
+      .send()
+      .then((res) => {
+        const { data } = res.body;
+        expect(Array.isArray(data)).toBe(true);
+
+        data.forEach(({ id, name }) => {
+          expect(typeof id === "number").toBe(true);
+          expect(typeof name === "string").toBe(true);
+        });
+
         done();
       })
       .catch(done);

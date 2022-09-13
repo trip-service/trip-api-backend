@@ -1,9 +1,10 @@
 const database = require("../database/models");
 
-module.exports.getAllCities = async () => {
-  const res = await database.Attraction.findAll({
+const getAllCities = async () =>
+  database.Attraction.findAll({
     attributes: ["id", "name"],
   });
 
-  return res;
+module.exports = {
+  getAllCities,
 };
