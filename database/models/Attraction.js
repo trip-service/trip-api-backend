@@ -2,6 +2,7 @@ module.exports = (sequelize, Sequelize) => {
   const Attraction = sequelize.define(
     "Attraction",
     {
+      ...baseMigration,
       id: {
         allowNull: false,
         autoIncrement: true,

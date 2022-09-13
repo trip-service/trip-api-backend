@@ -1,7 +1,10 @@
+const baseMigration = require( "../config/baseMigration" );
+
 module.exports = (sequelize, Sequelize) => {
   const Travel = sequelize.define(
     "Travel",
     {
+      ...baseMigration,
       id: {
         allowNull: false,
         autoIncrement: true,

@@ -1,11 +1,11 @@
 const express = require("express");
+const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const passport = require("passport");
 const pick = require("lodash/pick");
 const yup = require("yup");
 
 const { responseOk, responseErrWithMsg } = require("../helpers/response");
-// const { parseUserResponse } = require("../services/userServices");
+const { signInOrSignUpGoogleUser } = require("../services/memberServices");
 const { jwtAuthorizationMiddleware } = require("../helpers/passportManager");
 
 const router = express.Router();
@@ -41,18 +41,22 @@ router.post("/logout", jwtAuthorizationMiddleware, async (req, res) => {
 });
 
 const loginRequestSchema = yup.object({
-  phone: yup.string().required("電話或密碼不可為空"),
-  password: yup.string().required("電話或密碼不可為空"),
+  os: yup.string().oneOf(["ios", "android"]).required("系統欄位不可為空"),
+  token: yup.string().required("Google 令牌不可為空"),
+  notificationToken: yup.string().required("推播令牌不可為空"),
 });
 
 /**
  * @typedef LoginRequest
- * @property {string} phone.required
- *   - auth0 Response.sub
- *   - eg: 0987654321
- * @property {string} password.required
- *   - password: 6 ~ 20 個英數組合
- *   - eg: a12345678
+ * @property {enum} os.required
+ *   - App 系統
+ *   - eg: ios,android
+ * @property {string} token.required
+ *   - google 的令牌
+ *   - eg: 12j3lkjdlaj
+ * @property {string} notificationToken.required
+ *   - 推播 的令牌
+ *   - eg: 12j3lkjdlaj
  */
 
 /**
@@ -60,8 +64,12 @@ const loginRequestSchema = yup.object({
  * @property {number} id.required
  *  - member Id
  *  - eg: 1
- * @property {string} phone.required
- *  - member.phone
+ * @property {string} email.required
+ *  - 會員的信箱地址
+ *  - eg: aaa@bbb.com
+ * @property {string} name.required
+ *  - 會員的名稱
+ *  - tomasdemo
  */
 
 /**
@@ -84,30 +92,36 @@ const loginRequestSchema = yup.object({
  * @typedef LoginResponse
  * @property {{integer}} code - response code - eg: 200
  */
-router.post("/", (req, res) => {
-  passport.authenticate("local", { session: false }, async (error, user) => {
-    try {
-      if (error) throw error;
-      // const expireIn = add(new Date(), { days: 1 }).getTime();
-
-      const signInfo = pick(user, ["id", "phone"]);
-      const token = jwt.sign(
-        {
-          data: signInfo,
-          // exp: expireIn,
-        },
-        AUTH_SECRET
-      );
-
-      return responseOk(res, {
-        token,
-        expireIn: null,
-        user: null,
-      });
-    } catch (error) {
-      responseErrWithMsg(res, error.message);
-    }
-  })(req, res);
+router.post("/login", async (req, res) => {
+  try {
+    const validation = await loginRequestSchema.validate(req.body);
+    const userInfoResponse = await axios.get(
+      "https://www.googleapis.com/userinfo/v2/me",
+      {
+        headers: { Authorization: `Bearer ${validation.token}` },
+      }
+    );
+    const memberResult = await signInOrSignUpGoogleUser(userInfoResponse.data);
+    const signInfo = pick(memberResult, ["id", "email"]);
+    const token = jwt.sign(
+      {
+        data: signInfo,
+        // exp: expireIn,
+      },
+      AUTH_SECRET
+    );
+    return responseOk(res, {
+      token,
+      expireIn: null,
+      info: memberResult,
+    });
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: authRouter.js ~ line 119 ~ router.post ~ error",
+      error
+    );
+    responseErrWithMsg(res, error.message);
+  }
 });
 
 module.exports = router;

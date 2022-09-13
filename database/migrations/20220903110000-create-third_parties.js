@@ -21,8 +21,8 @@ module.exports = {
           type: Sequelize.ENUM("google"),
         },
       },
-      notification_token: {
-        type: Sequelize.TEXT,
+      reference_id: {
+        type: Sequelize.STRING,
       },
       created_at: {
         allowNull: false,

@@ -3,7 +3,7 @@ const passportJWT = require("passport-jwt");
 const isEmpty = require("lodash/isEmpty");
 const LocalStrategy = require("passport-local").Strategy;
 const { saltHashPassword } = require("./utils");
-// const { getUserWithPasswordBy } = require('../services/userServices');
+// const { getUserWithPasswordBy } = require('../services/memberServices');
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;

@@ -1,8 +1,10 @@
+const baseMigration = require( "../config/baseMigration" );
 
 module.exports = (sequelize, Sequelize) => {
   const Member = sequelize.define(
     "Member",
     {
+      ...baseMigration,
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -30,14 +32,14 @@ module.exports = (sequelize, Sequelize) => {
   });
 
   Member.associate = function (models) {
-    // User.hasMany(models.Contract, {
-    //   as: 'contracts',
-    //   foreignKey: {
-    //     name: 'user_id'
-    //   },
-    //   onUpdate: 'CASCADE',
-    //   onDelete: 'CASCADE',
-    // });
+    Member.hasOne(models.ThirdParty, {
+      as: 'thirdParty',
+      foreignKey: {
+        name: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
   };
 
   return Member;

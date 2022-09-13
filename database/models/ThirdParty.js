@@ -1,7 +1,10 @@
+const baseMigration = require( "../config/baseMigration" );
+
 module.exports = (sequelize, Sequelize) => {
   const ThirdParty = sequelize.define(
     "ThirdParty",
     {
+      ...baseMigration,
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -23,10 +26,10 @@ module.exports = (sequelize, Sequelize) => {
           type: Sequelize.ENUM("google"),
         },
       },
-      notificationToken: {
-        field: "notification_token",
-        type: Sequelize.TEXT,
-      },
+      referenceId: {
+        field: "reference_id",
+        type: Sequelize.STRING,
+      }
     },
     {
       sequelize,
@@ -39,14 +42,14 @@ module.exports = (sequelize, Sequelize) => {
   );
 
   ThirdParty.associate = function (models) {
-    // User.hasMany(models.Contract, {
-    //   as: 'contracts',
-    //   foreignKey: {
-    //     name: 'user_id'
-    //   },
-    //   onUpdate: 'CASCADE',
-    //   onDelete: 'CASCADE',
-    // });
+    ThirdParty.hasOne(models.Member, {
+      as: 'member',
+      foreignKey: {
+        name: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
   };
 
   return ThirdParty;
