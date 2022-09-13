@@ -3,7 +3,7 @@ const passportJWT = require("passport-jwt");
 const isEmpty = require("lodash/isEmpty");
 const LocalStrategy = require("passport-local").Strategy;
 const { saltHashPassword } = require("./utils");
-// const { getUserWithPasswordBy } = require('../services/memberServices');
+const { getUserWithPasswordBy } = require("../services/memberServices");
 
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
@@ -26,14 +26,14 @@ passport.use(
       passwordField: "password",
     },
     async (phone, password, done) => {
-      // const user = await getUserWithPasswordBy(phone);
-      // const { validated } = validateUserAndPassword(user, password);
+      const user = await getUserWithPasswordBy(phone);
+      const { validated } = validateUserAndPassword(user, password);
 
-      // if (!validated) {
-      //   const message = '使用者不存在或密碼錯誤';
-      //   const notfoundError = new Error(message);
-      //   return done(notfoundError, null, { message });
-      // }
+      if (!validated) {
+        const message = "使用者不存在或密碼錯誤";
+        const notfoundError = new Error(message);
+        return done(notfoundError, null, { message });
+      }
       return done(null, user);
     }
   )

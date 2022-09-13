@@ -1,3 +1,5 @@
+const baseMigration = require("../config/baseMigration");
+
 module.exports = (sequelize, Sequelize) => {
   const Attraction = sequelize.define(
     "Attraction",
