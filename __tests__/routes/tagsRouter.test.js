@@ -26,9 +26,7 @@ describe("Test tags routes", () => {
       .get("/tags")
       .send()
       .then((res) => {
-        const { data } = res.body;
-
-        const isValid = responseSchema.isValidSync(data);
+        const isValid = responseSchema.isValidSync(res.body);
 
         expect(isValid).toBe(true);
 
