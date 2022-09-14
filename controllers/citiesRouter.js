@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
   try {
     const data = await getAllCities();
 
-    return responseOk(res, { data });
+    return responseOk(res, data);
   } catch (error) {
     responseErrWithMsg(res, error.message);
   }

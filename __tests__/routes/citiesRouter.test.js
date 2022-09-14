@@ -1,11 +1,23 @@
 const { mockApp } = require("../server.test");
+const yup = require("yup");
+
+const responseSchema = yup.array().of(
+  yup.object({
+    id: yup.number().required(),
+    name: yup.string().required(),
+  })
+);
 
 describe("Test cities routes", () => {
   it("should get cities by mockUser success", (done) => {
     mockApp
       .get("/cities")
       .send()
-      .expect(200)
+      .then((res) => {
+        expect(res.statusCode).toBe(200);
+
+        done();
+      })
       .catch(done);
   });
 
@@ -14,13 +26,9 @@ describe("Test cities routes", () => {
       .get("/cities")
       .send()
       .then((res) => {
-        const { data } = res.body;
-        expect(Array.isArray(data)).toBe(true);
+        const isValid = responseSchema.isValidSync(res.body);
 
-        data.forEach(({ id, name }) => {
-          expect(typeof id === "number").toBe(true);
-          expect(typeof name === "string").toBe(true);
-        });
+        expect(isValid).toBe(true);
 
         done();
       })
