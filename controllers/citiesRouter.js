@@ -6,12 +6,7 @@ const { getAllCities } = require("../services/attractionsServices");
 const router = express.Router();
 
 /**
- * @typedef AttractionsResponse
- * @property {Array.<AttractionResponse>} data.required
- */
-
-/**
- * @typedef AttractionResponse
+ * @typedef CitiesResponse
  * @property {integer} id.required
  * @property {string} name.required
  */
@@ -21,11 +16,11 @@ const router = express.Router();
  * Cities Router.
  * @group cities
  * @route GET /cities
- * @returns {AttractionsResponse.model} 200 - success, return requested data
+ * @returns {CitiesResponse[]} 200 - success, An array of cities info
  * @returns {String} 400 - invalid request params/query/body
  * @returns {String} 404 - required data not found
  * @security none
- * @typedef AttractionsResponse
+ * @typedef CitiesResponse[]
  * @property {{integer}} code - response code - eg: 200
  */
 router.get("/", async (req, res) => {
