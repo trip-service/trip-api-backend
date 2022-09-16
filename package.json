@@ -57,7 +57,7 @@
     "start": "node server.js",
     "start:watch": "./node_modules/nodemon/bin/nodemon.js server.js",
     "start:docker": "./node_modules/nodemon/bin/nodemon.js /usr/src/app/server.js",
-    "test": "./node_modules/jest/bin/jest.js"
+    "test": "./node_modules/jest/bin/jest.js --forceExit --detectOpenHandles"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",

@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const swagger = require("express-swagger-generator");
 const indexRouter = require("../controllers/index");
 const authRouter = require("../controllers/authRouter");
-const homeRouter = require("../controllers/homeRouter");
+const travelRouter = require("../controllers/travelRouter");
 const citiesRouter = require("../controllers/citiesRouter");
 const tagsRouter = require("../controllers/tagsRouter");
 const packageJson = require("../package.json");
@@ -56,7 +56,7 @@ expressApp.use(passport.initialize());
 
 expressApp.use("/", indexRouter);
 expressApp.use("/auth", authRouter);
-expressApp.use("/home", homeRouter);
+expressApp.use("/travels", travelRouter);
 expressApp.use("/cities", citiesRouter);
 expressApp.use('/tags' , tagsRouter);
 
