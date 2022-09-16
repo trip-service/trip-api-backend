@@ -41,6 +41,15 @@ module.exports = (sequelize, Sequelize) => {
       onDelete: 'CASCADE',
     });
 
+    Member.hasMany(models.Travel, {
+      as: 'members',
+      foreignKey: {
+        name: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
+
     Member.hasOne(models.ThirdParty, {
       as: 'thirdParty',
       foreignKey: {

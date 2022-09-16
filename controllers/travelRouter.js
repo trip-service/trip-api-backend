@@ -9,6 +9,7 @@ const createTravelRequestSchema = yup.object({
 });
 
 const getTravelsRequestSchema = yup.object({
+  keyword: yup.string().nullable().default(null),
   page: yup.number().default(1),
   limit: yup.number().default(20),
 });
@@ -29,6 +30,7 @@ const getTravelsRequestSchema = yup.object({
  * Travel Router.
  * @group Travel
  * @route GET /travels
+ * @param {string} keyword.query - 搜尋標題關鍵字
  * @param {string} page.query - 頁數
  * @param {string} limit.query - 每頁幾筆資料
  * @returns {TravelResponse.model} 200 - success, return requested data

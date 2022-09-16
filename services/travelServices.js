@@ -1,4 +1,6 @@
 const database = require("../database/models");
+const isEmpty = require("lodash/isEmpty");
+const { Op } = require("sequelize");
 
 const getTravelByIdResult = async (travelId) =>
   database.Travel.findOne({
@@ -8,8 +10,19 @@ const getTravelByIdResult = async (travelId) =>
   });
 
 const getTravelsResult = async (body) => {
-  const { page, limit } = body;
+  const { keyword, page, limit } = body;
+
   const offset = (page - 1) * limit;
+  const whereCondition = {
+    "$member.id$": 1,
+  };
+
+  if (!isEmpty(keyword)) {
+    whereCondition.title = {
+      [Op.like]: `%${keyword}%`,
+    };
+  }
+
   const travelsResult = await database.Travel.findAndCountAll({
     include: [
       {
@@ -32,15 +45,13 @@ const getTravelsResult = async (body) => {
     attributes: ["id", "title", "startAt", "endAt", "description"],
     limit,
     offset,
-    where: {
-      "$member.id$": 1,
-    },
+    where: whereCondition,
   });
 
   return {
     count: travelsResult.count,
     rows: travelsResult.rows.map((travel) => {
-      const {member, ...travelObject} = travel.toJSON();
+      const { member, ...travelObject } = travel.toJSON();
       return travelObject;
     }),
   };
