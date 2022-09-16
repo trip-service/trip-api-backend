@@ -32,6 +32,15 @@ module.exports = (sequelize, Sequelize) => {
   });
 
   Member.associate = function (models) {
+    Member.hasMany(models.Travel, {
+      as: 'travels',
+      foreignKey: {
+        name: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
+
     Member.hasOne(models.ThirdParty, {
       as: 'thirdParty',
       foreignKey: {

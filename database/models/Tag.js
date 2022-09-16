@@ -25,6 +25,14 @@ module.exports = (sequelize, Sequelize) => {
   });
 
   Tag.associate = function (models) {
+
+    Tag.belongsToMany(models.Tag, {
+      as: "travels",
+      through: 'travel_tag_mapping',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
+
     // User.hasMany(models.Contract, {
     //   as: 'contracts',
     //   foreignKey: {

@@ -1,12 +1,16 @@
 const yup = require("yup");
 const express = require("express");
 const { responseOk } = require( "../helpers/response" );
-const { createTravelResult } = require( "../services/travelServices" );
+const { getTravelsResult, createTravelResult } = require( "../services/travelServices" );
 const router = express.Router();
-
 
 const createTravelRequestSchema = yup.object({
   title: yup.string().required("旅遊抬頭不可為空"),
+});
+
+const getTravelsRequestSchema = yup.object({
+  page: yup.number().default(1),
+  limit: yup.number().default(20),
 });
 
 /**
@@ -25,6 +29,8 @@ const createTravelRequestSchema = yup.object({
  * Travel Router.
  * @group Travel
  * @route GET /travels
+ * @param {string} page.query - 頁數
+ * @param {string} limit.query - 每頁幾筆資料
  * @returns {TravelResponse.model} 200 - success, return requested data
  * @returns {String} 400 - invalid request params/query/body
  * @returns {String} 404 - required data not found
@@ -32,8 +38,10 @@ const createTravelRequestSchema = yup.object({
  * @typedef TravelResponse
  * @property {{integer}} code - response code - eg: 200
  */
-router.get('/', function(req, res) {
-  res.json([]);
+router.get('/', async (req, res) => {
+  const validation = await getTravelsRequestSchema.validate(req.query);
+  const travelsResult = await getTravelsResult(validation);
+  res.json(travelsResult);
 });
 
 
