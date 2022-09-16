@@ -9,19 +9,17 @@ const responseSchema = yup.array().of(
 );
 
 describe("Test cities routes", () => {
-  it("should get cities by mockUser success", async () => {
-    try {
-      const res = await mockApp.get("/cities").send();
-      return expect(res.statusCode).toBe(200);
-    } catch (error) {}
+  test("should get cities by mockUser success", async () => {
+    const res = await mockApp.get("/cities").send();
+    expect(res.statusCode).toBe(200);
+    return;
   });
 
-  it("should the response data format right", async () => {
-    try {
-      const res = await mockApp.get("/cities").send();
+  test("should the response data format right", async () => {
+    const res = await mockApp.get("/cities").send();
 
-      const isValid = responseSchema.isValidSync(res.body);
-      expect(isValid).toBe(true);
-    } catch (error) {}
+    const isValid = responseSchema.isValidSync(res.body);
+    expect(isValid).toBe(true);
+    return;
   });
 });
