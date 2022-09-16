@@ -3,40 +3,41 @@ const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
-const swagger = require('express-swagger-generator');
+const swagger = require("express-swagger-generator");
 const indexRouter = require("../controllers/index");
 const authRouter = require("../controllers/authRouter");
 const homeRouter = require("../controllers/homeRouter");
+const citiesRouter = require("../controllers/citiesRouter");
 const tagsRouter = require("../controllers/tagsRouter");
-const packageJson = require('../package.json');
+const packageJson = require("../package.json");
 
 const { NODE_ENV, APP_DOMAIN } = process.env;
 
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
-      title: 'Trip-backend-api',
-      description: 'Trip backend api service.',
+      title: "Trip-backend-api",
+      description: "Trip backend api service.",
       version: `${packageJson.version} - ${NODE_ENV}`,
     },
     host: APP_DOMAIN,
-    produces: ['application/json'],
-    schemes: ['http', 'https'],
+    produces: ["application/json"],
+    schemes: ["http", "https"],
     securityDefinitions: {
       JWT: {
-        type: 'apiKey',
-        in: 'header',
-        name: 'Authorization',
-        description: 'JWT token',
+        type: "apiKey",
+        in: "header",
+        name: "Authorization",
+        description: "JWT token",
       },
     },
   },
   route: {
-    url: '/api-docs',
-    docs: '/api-docs.json',
+    url: "/api-docs",
+    docs: "/api-docs.json",
   },
   basedir: __dirname,
-  files: ['../controllers/*.js'],
+  files: ["../controllers/*.js"],
 };
 
 let expressApp = express();
@@ -53,16 +54,17 @@ expressApp.use(cookieParser());
 
 expressApp.use(passport.initialize());
 
-expressApp.use('/', indexRouter);
-expressApp.use('/auth', authRouter);
-expressApp.use('/home', homeRouter);
+expressApp.use("/", indexRouter);
+expressApp.use("/auth", authRouter);
+expressApp.use("/home", homeRouter);
+expressApp.use("/cities", citiesRouter);
 expressApp.use('/tags' , tagsRouter);
 
 // Add GET /health-check express route
 expressApp.get("/health-check", (req, res) => {
   res.json({
     success: true,
-    data: { status: 'WORKING' }
+    data: { status: "WORKING" },
   });
 });
 
