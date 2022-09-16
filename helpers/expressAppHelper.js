@@ -8,6 +8,7 @@ const indexRouter = require("../controllers/index");
 const authRouter = require("../controllers/authRouter");
 const homeRouter = require("../controllers/homeRouter");
 const citiesRouter = require("../controllers/citiesRouter");
+const tagsRouter = require("../controllers/tagsRouter");
 const packageJson = require("../package.json");
 
 const { NODE_ENV, APP_DOMAIN } = process.env;
@@ -57,6 +58,7 @@ expressApp.use("/", indexRouter);
 expressApp.use("/auth", authRouter);
 expressApp.use("/home", homeRouter);
 expressApp.use("/cities", citiesRouter);
+expressApp.use('/tags' , tagsRouter);
 
 // Add GET /health-check express route
 expressApp.get("/health-check", (req, res) => {
