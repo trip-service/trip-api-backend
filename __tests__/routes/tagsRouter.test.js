@@ -9,29 +9,19 @@ const responseSchema = yup.array().of(
 );
 
 describe("Test tags routes", () => {
-  it("should get tags by mockUser success", (done) => {
-    mockApp
-      .get("/tags")
-      .send()
-      .then((res) => {
-        expect(res.statusCode).toBe(200);
+  it("should get tags by mockTags success", async () => {
+    const res = await mockApp.get("/tags").send();
+    expect(res.statusCode).toBe(200);
 
-        done();
-      })
-      .catch(done);
+    return;
   });
 
-  it("should the response data format right", (done) => {
-    mockApp
-      .get("/tags")
-      .send()
-      .then((res) => {
-        const isValid = responseSchema.isValidSync(res.body);
+  it("should the response data format right", async () => {
+    const res = await mockApp.get("/tags").send();
 
-        expect(isValid).toBe(true);
+    const isValid = responseSchema.isValidSync(res.body);
+    expect(isValid).toBe(true);
 
-        done();
-      })
-      .catch(done);
+    return;
   });
 });

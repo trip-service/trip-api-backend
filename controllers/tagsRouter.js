@@ -6,12 +6,7 @@ const { getAllTags } = require("../services/tagsServices");
 const router = express.Router();
 
 /**
- * @typedef AttractionsResponse
- * @property {Array.<AttractionResponse>} data.required
- */
-
-/**
- * @typedef AttractionResponse
+ * @typedef TagsResponse
  * @property {integer} id.required
  * @property {string} name.required
  */
@@ -21,11 +16,11 @@ const router = express.Router();
  * Tag Router.
  * @group tags
  * @route GET /tags
- * @returns {AttractionsResponse.model} 200 - success, return requested data
+ * @returns {TagsResponse[]} 200 - success, return requested data
  * @returns {String} 400 - invalid request params/query/body
  * @returns {String} 404 - required data not found
  * @security none
- * @typedef AttractionsResponse
+ * @typedef TagsResponse[]
  * @property {{integer}} code - response code - eg: 200
  */
 router.get("/", async (req, res) => {
