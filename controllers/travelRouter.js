@@ -6,12 +6,17 @@ const {
   getTravelNodesResult,
   createTravelResult,
   updateTravelResult,
+  updateTravelNodeDateResult,
   createTravelNodeResult,
 } = require("../services/travelServices");
 const router = express.Router();
 
 const createTravelRequestSchema = yup.object().shape({
   title: yup.string().required("旅遊抬頭不可為空"),
+});
+
+const updateTravelNodeDateRequestSchema = yup.object().shape({
+  date: yup.date().required("日期不可為空"),
 });
 
 const createTravelNodeRequestSchema = yup.object().shape({
@@ -49,6 +54,13 @@ const getTravelsRequestSchema = yup.object().shape({
   page: yup.number().default(1),
   limit: yup.number().default(20),
 });
+
+/**
+ * @typedef UpdateTravelNodeDateRequest
+ * @property {date} date
+ *   - 要修改 旅程 node 日期的 date
+ *   - eg: 2022-01-01
+ */
 
 /**
  * @typedef NodeLinkInstance
@@ -103,7 +115,7 @@ const getTravelsRequestSchema = yup.object().shape({
  *   - eg: 旅遊節點的抬頭
  * @property {date} startAt
  *   - 旅程的 開始日期
- *   - eg: 2022-01-01
+ *   - eg: 2022-01-01 09:00:00
  * @property {number} duringTime
  *   - 旅遊節點 這個節點的分鐘數
  *   - eg: 60
@@ -303,6 +315,32 @@ router.put("/:travelId", async (req, res) => {
 
     const result = await updateTravelResult(travelId, validation);
     responseOk(res, result);
+  } catch (error) {
+    responseErrWithMsg(res, error.message);
+  }
+});
+
+
+/**
+ * Travel Router.
+ * @group Travel
+ * @route PUT /travels/{travelId}/nodes/{travelNodeId}/date
+ * @param {string} travelId.path.required - travel 的 ID
+ * @param {string} travelNodeId.path.required - travel node 的 ID
+ * @param {UpdateTravelNodeDateRequest.model} data.body.required - the new point
+ * @returns {object} 200 - success, return requested data
+ * @returns {string} 400 - invalid request params/query/body
+ * @returns {string} 404 - required data not found
+ * @security none
+ * @typedef object
+ * @property {{integer}} code - response code - eg: 200
+ */
+ router.put("/:travelId/nodes/:travelNodeId/date", async (req, res) => {
+  try {
+    const { travelId, travelNodeId } = req.params;
+    const validation = await updateTravelNodeDateRequestSchema.validate(req.body);
+    updateTravelNodeDateResult(travelId, travelNodeId, validation);
+    responseOk(res, {});
   } catch (error) {
     responseErrWithMsg(res, error.message);
   }

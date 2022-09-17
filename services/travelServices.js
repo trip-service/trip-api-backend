@@ -194,10 +194,29 @@ const updateTravelResult = async (travelId, body) => {
   return await getTravelByIdResult(travelId);
 };
 
+const updateTravelNodeDateResult = async (travelId, travelNodeId, body) => {
+  const travelNodeResult = await database.TravelNode.findOne({
+    where: {
+      travelId,
+      id: travelNodeId,
+    }
+  });
+
+  if (isEmpty(travelNodeResult)) {
+    throw new Error("旅遊節點不存在");
+  }
+
+  travelNodeResult.date = body.date;
+  await travelNodeResult.save();
+  await travelNodeResult.reload();
+  return travelNodeResult;
+};
+
 module.exports = {
   getTravelsResult,
   getTravelNodesResult,
   updateTravelResult,
+  updateTravelNodeDateResult,
   createTravelResult,
   createTravelNodeResult,
   removeTravelsUnitestResult,
