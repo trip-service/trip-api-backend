@@ -1,4 +1,6 @@
 const database = require("../database/models");
+const startOfDay = require('date-fns/startOfDay')
+const pick = require("lodash/pick");
 const isEmpty = require("lodash/isEmpty");
 const isDate = require( "lodash/isDate" );
 const isNull = require("lodash/isNull");
@@ -76,10 +78,42 @@ const getTravelsResult = async (body) => {
   };
 };
 
+const getTravelNodesResult = async (travelId) => {
+  const travelNodesResult = await database.TravelNode.findAll({
+    attributes: ["id", "title", "startAtTime", "description", "location", "date", "duration"],
+    where: { travelId },
+  });
+
+  return travelNodesResult.map(travelNode => {
+    const result = pick(travelNode, ["id", "title", "description", "location", "date", "duration"]);
+    return {...result, startAt: travelNode.startAtTime, tags: []}; // TODO: tags 還沒有建立綁定的 table
+  });
+};
+
 const createTravelResult = async (body) => {
-  const createdResult = await database.Travel.create({
+  return await database.Travel.create({
     title: body.title,
     memberId: 1,
+  });
+};
+
+const createTravelNodeResult = async (travelId, body) => {
+  const travelResult = await database.Travel.findOne({
+    where: { id: travelId },
+  });
+
+  if(isEmpty(travelResult)) {
+    throw new Error("行程不存在");
+  }
+
+  await database.TravelNode.create({
+    travelId,
+    title: body.title,
+    description: body.description,
+    startAtTime: body.startAt,
+    duration: body.duringTime,
+    date: startOfDay(body.startAt),
+    location: body.geoJson,
   });
 };
 
@@ -160,9 +194,30 @@ const updateTravelResult = async (travelId, body) => {
   return await getTravelByIdResult(travelId);
 };
 
+const updateTravelNodeDateResult = async (travelId, travelNodeId, body) => {
+  const travelNodeResult = await database.TravelNode.findOne({
+    where: {
+      travelId,
+      id: travelNodeId,
+    }
+  });
+
+  if (isEmpty(travelNodeResult)) {
+    throw new Error("旅遊節點不存在");
+  }
+
+  travelNodeResult.date = body.date;
+  await travelNodeResult.save();
+  await travelNodeResult.reload();
+  return travelNodeResult;
+};
+
 module.exports = {
   getTravelsResult,
+  getTravelNodesResult,
   updateTravelResult,
+  updateTravelNodeDateResult,
   createTravelResult,
+  createTravelNodeResult,
   removeTravelsUnitestResult,
 };
