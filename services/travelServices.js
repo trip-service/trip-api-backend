@@ -92,16 +92,9 @@ const getReduceTags = (targetTags, sourceTagIds) => {
   }
   const targetTagIds = targetTags.map((tag) => tag.id);
 
-  const newTags = sourceTagIds.filter((tagId) => {
-    console.log(
-      "🚀 ~ file: travelServices.js ~ line 97 ~ newTags ~ targetTagIds",
-      targetTagIds
-    );
-    return !targetTagIds.includes(tagId);
-  });
-  const loseTags = targetTagIds.filter(
-    (tagId) => !sourceTagIds.includes(tagId)
-  );
+  const newTags = sourceTagIds.filter((tagId) => !targetTagIds.includes(tagId));
+  const loseTags = targetTagIds.filter((tagId) => !sourceTagIds.includes(tagId));
+
   return { newTags, loseTags };
 };
 
