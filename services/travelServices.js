@@ -93,10 +93,15 @@ const getReduceTags = (targetTags, sourceTagIds) => {
   const targetTagIds = targetTags.map((tag) => tag.id);
 
   const newTags = sourceTagIds.filter((tagId) => {
-    console.log("🚀 ~ file: travelServices.js ~ line 97 ~ newTags ~ targetTagIds", targetTagIds)
+    console.log(
+      "🚀 ~ file: travelServices.js ~ line 97 ~ newTags ~ targetTagIds",
+      targetTagIds
+    );
     return !targetTagIds.includes(tagId);
   });
-  const loseTags = targetTagIds.filter((tagId) => !sourceTagIds.includes(tagId));
+  const loseTags = targetTagIds.filter(
+    (tagId) => !sourceTagIds.includes(tagId)
+  );
   return { newTags, loseTags };
 };
 
@@ -145,14 +150,17 @@ const updateTravelResult = async (travelId, body) => {
       })
     );
 
-    await database.TravelTagMapping.destroy({
-      where: {
-        [Op.or]: loseTags.map((tagId) => ({
-          tagId,
-          travelId: travelIdResult.id,
-        })),
+    await database.TravelTagMapping.destroy(
+      {
+        where: {
+          [Op.or]: loseTags.map((tagId) => ({
+            tagId,
+            travelId: travelIdResult.id,
+          })),
+        },
       },
-    });
+      { transaction: t }
+    );
   });
   return await getTravelByIdResult(travelId);
 };
