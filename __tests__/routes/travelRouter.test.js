@@ -3,8 +3,8 @@ const { mockApp } = require("../server.test");
 
 const mockDataForEditTravel = {
   title: "edittest 旅程標題",
-  startAt: "2022-01-01",
-  endAt: "2022-01-07",
+  startAt: "2022-01-01T00:00:00.000Z",
+  endAt: "2022-01-07T00:00:00.000Z",
   description: "旅遊的描述內容",
   cityId: 1,
   tagIds: [1, 2],
@@ -63,6 +63,8 @@ describe("Test travels routes", () => {
     expect(updatedRes.title).toBe(mockDataForEditTravel.title);
     expect(updatedRes.description).toBe(mockDataForEditTravel.description);
     expect(updatedRes.city.id).toBe(mockDataForEditTravel.cityId);
+    expect(updatedRes.startAt).toBe(mockDataForEditTravel.startAt);
+    expect(updatedRes.endAt).toBe(mockDataForEditTravel.endAt);
 
     updatedRes.tags.forEach(({ id }) => {
       const isIdExist = mockDataForEditTravel.tagIds.includes(id);
