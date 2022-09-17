@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.JSON,
       },
       start_at_time: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DATE,
         length: 4,
       },
       duration: {

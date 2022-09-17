@@ -33,8 +33,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       startAtTime: {
         field: "start_at_time",
-        type: Sequelize.INTEGER,
-        length: 4,
+        type: Sequelize.DATE,
       },
       duration: {
         field: "duration",

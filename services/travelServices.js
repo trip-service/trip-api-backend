@@ -1,4 +1,5 @@
 const database = require("../database/models");
+const startOfDay = require('date-fns/startOfDay')
 const isEmpty = require("lodash/isEmpty");
 const isNull = require("lodash/isNull");
 const { Op } = require("sequelize");
@@ -75,9 +76,29 @@ const getTravelsResult = async (body) => {
 };
 
 const createTravelResult = async (body) => {
-  const createdResult = await database.Travel.create({
+  return await database.Travel.create({
     title: body.title,
     memberId: 1,
+  });
+};
+
+const createTravelNodeResult = async (travelId, body) => {
+  const travelResult = await database.Travel.findOne({
+    where: { id: travelId },
+  });
+
+  if(isEmpty(travelResult)) {
+    throw new Error("行程不存在");
+  }
+
+  await database.TravelNode.create({
+    travelId,
+    title: body.title,
+    description: body.description,
+    startAtTime: body.startAt,
+    duration: body.duringTime,
+    date: startOfDay(body.startAt),
+    location: body.geoJson,
   });
 };
 
@@ -162,5 +183,6 @@ module.exports = {
   getTravelsResult,
   updateTravelResult,
   createTravelResult,
+  createTravelNodeResult,
   removeTravelsUnitestResult,
 };
