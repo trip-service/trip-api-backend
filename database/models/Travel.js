@@ -19,6 +19,14 @@ module.exports = (sequelize, Sequelize) => {
           key: "id",
         },
       },
+      memberId: {
+        field: "member_id",
+        type: Sequelize.INTEGER,
+        references: {
+          model: "members",
+          key: "id",
+        },
+      },
       title: {
         field: "title",
         type: Sequelize.STRING,
@@ -47,14 +55,30 @@ module.exports = (sequelize, Sequelize) => {
   );
 
   Travel.associate = function (models) {
-    // User.hasMany(models.Contract, {
-    //   as: 'contracts',
-    //   foreignKey: {
-    //     name: 'user_id'
-    //   },
-    //   onUpdate: 'CASCADE',
-    //   onDelete: 'CASCADE',
-    // });
+    Travel.belongsTo(models.Attraction, {
+      as: 'city',
+      foreignKey: {
+        name: 'attraction_id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
+
+    Travel.belongsToMany(models.Tag, {
+      as: "tags",
+      through: 'travel_tag_mapping',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
+
+    Travel.belongsTo(models.Member, {
+      as: 'member',
+      foreignKey: {
+        name: 'member_id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
   };
 
   return Travel;

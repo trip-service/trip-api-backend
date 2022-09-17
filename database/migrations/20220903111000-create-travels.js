@@ -15,6 +15,13 @@ module.exports = {
           key: "id",
         },
       },
+      member_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "members",
+          key: "id",
+        },
+      },
       title: {
         allowNull: false,
         type: Sequelize.STRING,

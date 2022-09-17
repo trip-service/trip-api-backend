@@ -32,14 +32,14 @@ module.exports = (sequelize, Sequelize) => {
   );
 
   Attraction.associate = function (models) {
-    // User.hasMany(models.Contract, {
-    //   as: 'contracts',
-    //   foreignKey: {
-    //     name: 'user_id'
-    //   },
-    //   onUpdate: 'CASCADE',
-    //   onDelete: 'CASCADE',
-    // });
+    Attraction.hasMany(models.Travel, {
+      as: 'travels',
+      foreignKey: {
+        name: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
   };
 
   return Attraction;
