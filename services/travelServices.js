@@ -1,8 +1,10 @@
 const database = require("../database/models");
 const startOfDay = require('date-fns/startOfDay')
 const isEmpty = require("lodash/isEmpty");
+const isDate = require( "lodash/isDate" );
 const isNull = require("lodash/isNull");
 const { Op } = require("sequelize");
+
 
 const getTravelByIdResult = async (travelId) => {
   const travelResult = await database.Travel.findOne({
@@ -134,10 +136,10 @@ const updateTravelResult = async (travelId, body) => {
   if (!isEmpty(body.title)) {
     whereCondition.title = body.title;
   }
-  if (!isEmpty(body.startAt)) {
+  if (isDate(body.startAt)) {
     whereCondition.startAt = body.startAt;
   }
-  if (!isEmpty(body.endAt)) {
+  if (isDate(body.endAt)) {
     whereCondition.endAt = body.endAt;
   }
 
