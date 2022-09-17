@@ -3,6 +3,7 @@ const express = require("express");
 const { responseOk, responseErrWithMsg } = require("../helpers/response");
 const {
   getTravelsResult,
+  getTravelNodesResult,
   createTravelResult,
   updateTravelResult,
   createTravelNodeResult,
@@ -118,6 +119,31 @@ const getTravelsRequestSchema = yup.object().shape({
  */
 
 /**
+ * @typedef TravelNode
+ * @property {number} id
+ *   - 旅程 節點的 ID
+ *   - eg: 旅遊節點的ID
+ * @property {string} title
+ *   - 旅程 節點的 Title
+ *   - eg: 旅遊節點的抬頭
+ * @property {date} startAt
+ *   - 旅程的 開始日期
+ *   - eg: 2022-01-01
+ * @property {number} duringTime
+ *   - 旅遊節點 這個節點的分鐘數
+ *   - eg: 60
+ * @property {string} description
+ *   - 旅遊節點的 內容
+ *   - eg: 旅遊節點的描述內容
+ * @property {Array.<NodeLinkInstance>} links
+ *   - 連結文章的網站連結陣列
+ *   - eg: 1
+ * @property {GeoJsonInstance.model} location
+ *   - 綁定標籤的 id 陣列
+ *   - eg: {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"city":"Taichung"},"geometry":{"type":"LineString","coordinates":[[120.68645864725113,24.13755794057052],[120.6864908337593,24.137565283651107]]}}]}
+ */
+
+/**
  * @typedef UpdateTravelRequest
  * @property {string} title
  *   - 旅程的 Title
@@ -199,6 +225,24 @@ router.get("/", async (req, res) => {
 /**
  * Travel Router.
  * @group Travel
+ * @route GET /travels/{travelId}/nodes
+ * @param {string} travelId.path.required - travel 的 ID
+ * @returns {Array.<TravelNode>} 200 - success, return requested data
+ * @returns {string} 400 - invalid request params/query/body
+ * @returns {string} 404 - required data not found
+ * @security none
+ * @typedef TravelNode
+ * @property {{integer}} code - response code - eg: 200
+ */
+ router.get("/:travelId/nodes", async (req, res) => {
+  const {travelId} = req.params;
+  const travelNodesResult = await getTravelNodesResult(Number(travelId));
+  responseOk(res, travelNodesResult);
+});
+
+/**
+ * Travel Router.
+ * @group Travel
  * @route POST /travels
  * @param {TravelRequest.model} data.body.required - the new point
  * @returns {TravelResponse.model} 200 - success, return requested data
@@ -217,7 +261,7 @@ router.post("/", async (req, res) => {
 /**
  * Travel Router.
  * @group Travel
- * @route POST /travels/{travelId}/node
+ * @route POST /travels/{travelId}/nodes
  * @param {string} travelId.path.required - travel 的 ID
  * @param {CreateTravelNodeRequest.model} data.body.required - the new point
  * @returns {TravelResponse.model} 200 - success, return requested data
@@ -227,7 +271,7 @@ router.post("/", async (req, res) => {
  * @typedef TravelResponse
  * @property {{integer}} code - response code - eg: 200
  */
-router.post("/:travelId/node", async (req, res) => {
+router.post("/:travelId/nodes", async (req, res) => {
   try {
     const validation = await createTravelNodeRequestSchema.validate(req.body);
     const {travelId} = req.params;

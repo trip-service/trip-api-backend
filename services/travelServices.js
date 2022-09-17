@@ -1,5 +1,6 @@
 const database = require("../database/models");
 const startOfDay = require('date-fns/startOfDay')
+const pick = require("lodash/pick");
 const isEmpty = require("lodash/isEmpty");
 const isDate = require( "lodash/isDate" );
 const isNull = require("lodash/isNull");
@@ -75,6 +76,18 @@ const getTravelsResult = async (body) => {
       return travelObject;
     }),
   };
+};
+
+const getTravelNodesResult = async (travelId) => {
+  const travelNodesResult = await database.TravelNode.findAll({
+    attributes: ["id", "title", "startAtTime", "description", "location", "date", "duration"],
+    where: { travelId },
+  });
+
+  return travelNodesResult.map(travelNode => {
+    const result = pick(travelNode, ["id", "title", "description", "location", "date", "duration"]);
+    return {...result, startAt: travelNode.startAtTime, tags: []}; // TODO: tags 還沒有建立綁定的 table
+  });
 };
 
 const createTravelResult = async (body) => {
@@ -183,6 +196,7 @@ const updateTravelResult = async (travelId, body) => {
 
 module.exports = {
   getTravelsResult,
+  getTravelNodesResult,
   updateTravelResult,
   createTravelResult,
   createTravelNodeResult,
