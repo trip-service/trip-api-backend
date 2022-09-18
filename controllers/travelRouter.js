@@ -32,9 +32,9 @@ const createTravelNodeRequestSchema = yup.object().shape({
     type: yup.string().required("geoJson 的類型不可為空"),
     features: yup.array().of(yup.object().shape({
       type: yup.string().required("feature 的類型不可為空"),
-      properties: yup.array().of(yup.object().shape({
+      properties: yup.object().shape({
         city: yup.string().required("city 不可為空")
-      })),
+      }),
       coordinates: yup.array().of(yup.array().of(yup.number()))
     }))
   }),
@@ -290,6 +290,7 @@ router.post("/:travelId/nodes", async (req, res) => {
     await createTravelNodeResult(travelId, validation);
     responseOk(res, {});
   }catch(error) {
+    console.log("🚀 ~ file: travelRouter.js ~ line 293 ~ router.post ~ error", error)
     responseErrWithMsg(res, error.message)
   }
 });
